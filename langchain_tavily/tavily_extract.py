@@ -101,17 +101,17 @@ class TavilyExtract(BaseTool):  # type: ignore[override, override]
     
     Default is False.
     """
-    apiwrapper: TavilyExtractAPIWrapper = Field(default_factory=TavilyExtractAPIWrapper)  # type: ignore[arg-type]
+    api_wrapper: TavilyExtractAPIWrapper = Field(default_factory=TavilyExtractAPIWrapper)  # type: ignore[arg-type]
 
     def __init__(self, **kwargs: Any) -> None:
-        # Create apiwrapper with tavily_api_key, api_base_url, and proxies if provided
+        # Create api_wrapper with tavily_api_key, api_base_url, and proxies if provided
         valid_kwargs = ["tavily_api_key", "api_base_url", "proxies"]
         if any(kwarg in kwargs for kwarg in valid_kwargs):
             wrapper_kwargs = {}
             for kwarg in valid_kwargs:
                 if kwarg in kwargs:
                     wrapper_kwargs[kwarg] = kwargs[kwarg]
-            kwargs["apiwrapper"] = TavilyExtractAPIWrapper(**wrapper_kwargs)
+            kwargs["api_wrapper"] = TavilyExtractAPIWrapper(**wrapper_kwargs)
         super().__init__(**kwargs)
 
     def _run(
@@ -125,7 +125,7 @@ class TavilyExtract(BaseTool):  # type: ignore[override, override]
         """Use the tool."""
         try:
             # Execute search with parameters directly
-            raw_results = self.apiwrapper.raw_results(
+            raw_results = self.api_wrapper.raw_results(
                 urls=urls,
                 extract_depth=self.extract_depth
                 if self.extract_depth
@@ -173,7 +173,7 @@ class TavilyExtract(BaseTool):  # type: ignore[override, override]
     ) -> Dict[str, Any]:
         """Use the tool asynchronously."""
         try:
-            raw_results = await self.apiwrapper.raw_results_async(
+            raw_results = await self.api_wrapper.raw_results_async(
                 urls=urls,
                 extract_depth=self.extract_depth
                 if self.extract_depth
